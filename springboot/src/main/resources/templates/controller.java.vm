@@ -1,0 +1,90 @@
+package ${package.Controller};
+
+
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import org.springframework.web.bind.annotation.*;
+import javax.annotation.Resource;
+import java.util.List;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+
+import ${package.Service}.${table.serviceName};
+import ${package.Entity}.${entity};
+
+#if(${restControllerStyle})
+import org.springframework.web.bind.annotation.RestController;
+#else
+import org.springframework.stereotype.Controller;
+#end
+#if(${superControllerClassPackage})
+import ${superControllerClassPackage};
+#end
+
+/**
+ * <p>
+ * $!{table.comment} 前端控制器
+ * </p>
+ *
+ * @author ${author}
+ * @since ${date}
+ */
+#if(${restControllerStyle})
+@RestController
+#else
+@Controller
+#end
+@RequestMapping("#if(${package.ModuleName})/${package.ModuleName}#end/#if(${controllerMappingHyphenStyle})${controllerMappingHyphen}#else${table.entityPath}#end")
+#if(${kotlin})
+class ${table.controllerName}#if(${superControllerClass}) : ${superControllerClass}()#end
+
+#else
+#if(${superControllerClass})
+public class ${table.controllerName} extends ${superControllerClass} {
+#else
+public class ${table.controllerName} {
+#end
+
+    @Resource
+    private ${table.serviceName} ${table.entityPath}Service;
+
+    //新增和修改
+    @PostMapping
+    public boolean save(@RequestBody ${entity} ${table.entityPath}){//@RequestBody将前台josn对象转换为后台的java对象
+        //新增或者更新
+        return ${table.entityPath}Service.saveOrUpdate(${table.entityPath});
+    }
+
+    //删除指定deptid的数据
+    @DeleteMapping("/{id}")
+    public boolean delete(@PathVariable Integer id){  //@PathVariable这个注解表示上面url这个参数，上面花括号里面的id和这个参数id是一一对应的
+        return ${table.entityPath}Service.removeById(id);
+    }
+
+    @PostMapping("/del/batch")
+    public boolean deleteBatch(@RequestBody List<Integer> deptids){
+        return ${table.entityPath}Service.removeByIds(deptids);
+    }
+
+    //查询所有数据
+    @GetMapping
+    public List<${entity}> findAll(){
+        //List<Department> all=departmentMapper.findAll();
+        return ${table.entityPath}Service.list();
+    }
+
+    @GetMapping("/{id}")
+    public ${entity} findeOne(@PathVariable Integer id){
+        return ${table.entityPath}Service.getById(id);
+    }
+
+    //分页查询-mybatis-plus的方式进行
+    @GetMapping("/page")
+    public Page<${entity}> findPage(@RequestParam Integer pageNum,
+                                    @RequestParam Integer pageSize){
+        QueryWrapper<${entity}> queryWrapper= new QueryWrapper<>();
+        queryWrapper.orderByDesc("id");
+        return ${table.entityPath}Service.page(new Page<>(pageNum,pageSize),queryWrapper);
+    }
+
+}
+
+#end

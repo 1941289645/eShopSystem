@@ -1,0 +1,14 @@
+# 忽略所有的node_modules文件夹
+eBookShare/frontdesk/node_modules/
+eBookShare/backstage/node_modules/
+eBookShare/db_peoject_bs/node_modules/
+
+# 忽略所有的.idea文件夹
+eBookShare/frontdesk/.idea/
+eBookShare/backstage/.idea/
+eBookShare/db_peoject_bs/.idea/
+eBookShare/eBookShare/.idea
+
+/eBookShare/target/
+eBookShare/src/main/resources/application.yml
+
