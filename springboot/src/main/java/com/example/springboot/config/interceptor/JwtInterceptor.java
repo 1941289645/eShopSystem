@@ -7,8 +7,10 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.example.springboot.common.Constants;
+import com.example.springboot.entity.Members;
 import com.example.springboot.entity.Teacher;
 import com.example.springboot.exception.ServiceException;
+import com.example.springboot.service.IMembersService;
 import com.example.springboot.service.ITeacherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.method.HandlerMethod;
@@ -20,11 +22,12 @@ import javax.servlet.http.HttpServletResponse;
 
 public class JwtInterceptor implements HandlerInterceptor {
     @Autowired
-    private ITeacherService teacherService;
+    private IMembersService membersService;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         String token = request.getHeader("token");// 从 http 请求头中取出 token
+        //System.out.println(token);
         // 如果不是映射到方法直接通过
         if(!(handler instanceof HandlerMethod)){
             return true;
@@ -41,12 +44,12 @@ public class JwtInterceptor implements HandlerInterceptor {
             throw new ServiceException(Constants.code_401,"token验证失败，请重新登录");
         }
         //根据token中的userid查询数据库
-        Teacher user = teacherService.getById(userId);
+        Members user = membersService.getById(userId);
         if (user == null) {
             throw new ServiceException(Constants.code_401,"用户不存在，请重新登录");
         }
         // 用户密码加签验证 token
-        JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(user.getTpassword())).build();
+        JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(user.getPassword())).build();
         try {
             jwtVerifier.verify(token);   //验证token
         } catch (JWTVerificationException e) {

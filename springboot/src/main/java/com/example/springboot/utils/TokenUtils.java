@@ -4,8 +4,8 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.example.springboot.entity.Teacher;
-import com.example.springboot.service.ITeacherService;
+import com.example.springboot.entity.Members;
+import com.example.springboot.service.IMembersService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -18,13 +18,13 @@ import java.util.Date;
 public class TokenUtils {
 
 
-    private static ITeacherService staticTeacherService;
+    private static IMembersService staticMembersService;
     @Resource
-    private ITeacherService teacherService;
+    private IMembersService MembersService;
 
     @PostConstruct
-    public void setTeacherService(){
-        staticTeacherService=teacherService;
+    public void setMembersService(){
+        staticMembersService=MembersService;
     }
 
     /**
@@ -41,13 +41,13 @@ public class TokenUtils {
      * 获取当前登录的用户信息
      * @return
      */
-    public static Teacher getCurrentUser(){
+    public static Members getCurrentUser(){
         try{
         HttpServletRequest request=((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         String token=request.getHeader("token");
         if(StrUtil.isNotBlank(token)){
                 String userId=JWT.decode(token).getAudience().get(0);
-                return staticTeacherService.getById(Integer.valueOf(userId));
+                return staticMembersService.getById(Integer.valueOf(userId));
             }
         }catch (Exception e){
             return null;

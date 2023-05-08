@@ -6,11 +6,12 @@ Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '/',
+    path: '/manage',
     component: () => import('../views/Manage.vue'),
-    redirect:"/login",
+    redirect:"/manage/home",
     children:[
       {path: 'home', name: '首页',component: () => import('../views/Home.vue')},
+      {path: 'products', name: '商品管理',component: () => import('../views/Products.vue')},
       {path: 'class', name: '班级管理', component: () => import('../views/Class.vue')},
       {path: 'person', name: '个人信息', component: () => import('../views/Person.vue')},
     ]
@@ -29,6 +30,10 @@ const routes = [
     path:'/register',
     name:'Register',
     component:()=>import('../views/Register.vue')
+  },
+  {
+    path: '/',
+    redirect: '/login'
   }
 ]
 

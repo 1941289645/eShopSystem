@@ -78,8 +78,8 @@ public class LessonchooseController {
             //queryWrapper.and(w -> w.like("address",address));
         }
 
-        Teacher currentUser= TokenUtils.getCurrentUser();
-        queryWrapper.like("tnumber",currentUser.getId());
+  //      Teacher currentUser= TokenUtils.getCurrentUser();
+   //     queryWrapper.like("tnumber",currentUser.getId());
 //        queryWrapper.orderByDesc("id");
         return lessonchooseService.page(new Page<>(pageNum,pageSize),queryWrapper);
     }

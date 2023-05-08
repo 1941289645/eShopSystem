@@ -87,8 +87,8 @@ public class DepartmentController {
         queryWrapper.orderByDesc("deptid");
 
         //获取当前用户信息
-        Teacher currentUser= TokenUtils.getCurrentUser();
-        System.out.println("获取当前用户信息================="+currentUser.getTname());
+        //Teacher currentUser= TokenUtils.getCurrentUser();
+        //System.out.println("获取当前用户信息================="+currentUser.getTname());
         return departmentService.page(new Page<>(pageNum,pageSize),queryWrapper);
     }
 
