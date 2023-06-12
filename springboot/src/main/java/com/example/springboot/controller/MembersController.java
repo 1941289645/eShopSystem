@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.springboot.common.Constants;
 import com.example.springboot.common.Result;
 import com.example.springboot.controller.dto.UserDTO;
+import com.example.springboot.entity.Teacher;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.util.List;
@@ -83,6 +84,14 @@ public class MembersController {
     @GetMapping("/{id}")
     public Members findeOne(@PathVariable Integer id){
         return membersService.getById(id);
+    }
+
+    @GetMapping("/id/{id}")
+    public Result findOne(@PathVariable Integer id){
+        QueryWrapper<Members> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("id",id);
+        Members members = membersService.getOne(queryWrapper);
+        return Result.success(members);
     }
 
     //分页查询-mybatis-plus的方式进行

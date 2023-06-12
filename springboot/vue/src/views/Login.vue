@@ -28,7 +28,7 @@ export default {
   data(){
     return{
       user:{
-        role:"user"
+        role:""
       },
       rules: {
         login: [

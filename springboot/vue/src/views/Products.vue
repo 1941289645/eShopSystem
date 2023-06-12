@@ -30,15 +30,21 @@
     </div>
 
     <el-table :data="tableData" border stripe :header-cell-class-name="headerBg" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55"></el-table-column>  <!--选择框-->
+      <el-table-column type="selection" ></el-table-column>  <!--选择框-->
       <el-table-column prop="id" label="ID"></el-table-column>
       <el-table-column prop="name" label="名称" ></el-table-column>
       <el-table-column prop="price" label="价格"></el-table-column>
-      <el-table-column prop="image" label="图片"></el-table-column>
+      <el-table-column prop="nums" label="库存"></el-table-column>
+      <el-table-column prop="unit" label="库存单位"></el-table-column>
+      <el-table-column prop="image" label="图片">
+        <template slot-scope="scope">
+          <el-image style="" :src="scope.row.image" :preview-src-list="[scope.row.image]"></el-image>
+        </template>
+      </el-table-column>
       <el-table-column prop="categoryName" label="类别"></el-table-column>
       <el-table-column prop="onSale" label="上架状态">
         <template v-slot="scope">
-          <el-switch v-model="scope.row.onSale" active-color="green"></el-switch>
+          <el-switch v-model="scope.row.onSale" active-color="lightgreen" @change = "changeEnable(scope.row)"></el-switch>
         </template>
       </el-table-column>
       <el-table-column prop="publishOn" label="上架时间"></el-table-column>
@@ -79,8 +85,20 @@
         <el-form-item label="价格">
           <el-input v-model="form.price" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="图片">
-          <el-input v-model="form.image" autocomplete="off"></el-input>
+        <el-form-item label="库存">
+          <el-input v-model="form.nums" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="库存单位">
+          <el-input v-model="form.unit" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item prop="img" label="图片">
+          <el-upload action="http://localhost:9090/file/product/upload"
+                     ref="image"
+                     :on-success="handleImgUploadSuccess"
+                     :limit="1"
+          >
+            <el-button size="small" type="primary">点击上传</el-button>
+          </el-upload>
         </el-form-item>
         <el-form-item label="类别">
           <el-select clearable v-model="form.productCategoryId" placeholder="请选择">
@@ -188,6 +206,7 @@ export default {
           this.$message.error("保存失败")
         }
       })
+      this.$refs.image.clearFiles();
     },
     reset(){
       this.name=""
@@ -203,6 +222,9 @@ export default {
       this.pageNum=pageNum
       this.load()
     },
+    handleImgUploadSuccess(res){
+      this.form.image=res
+    }
     // exp(){
     //   window.open("http://localhost:9090/department/export")
     // },

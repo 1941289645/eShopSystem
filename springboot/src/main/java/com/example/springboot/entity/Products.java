@@ -41,6 +41,11 @@ public class Products implements Serializable {
 
     private String image;
 
+    private Integer nums;
+
+    private String unit;
+
+
     @TableField(exist = false)
     private String categoryName;
 

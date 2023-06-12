@@ -14,6 +14,7 @@ const routes = [
       {path: 'products', name: '商品管理',component: () => import('../views/Products.vue')},
       {path: 'class', name: '班级管理', component: () => import('../views/Class.vue')},
       {path: 'person', name: '个人信息', component: () => import('../views/Person.vue')},
+      {path: 'file', name: '文件管理', component: () => import('../views/File.vue')},
     ]
   },
   {

@@ -30,9 +30,9 @@
         <i class="el-icon-s-grid"></i>
         <span slot="title">系统管理</span>
       </template>
-      <el-menu-item index="/manage/class">
-        <i class="el-icon-s-custom"></i>
-        <span slot="title">班级管理</span>
+      <el-menu-item index="/manage/file">
+        <i class="el-icon-document"></i>
+        <span slot="title">文件管理</span>
       </el-menu-item>
     </el-submenu>
   </el-menu>

@@ -20,3 +20,15 @@ mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
+files:
+  upload:
+    path: E:/code/files/
+
+avatarimg:
+  upload:
+    path: E:/code/files/avatarimg/
+
+productimg:
+  upload:
+    path: E:/code/files/productimg/
+
