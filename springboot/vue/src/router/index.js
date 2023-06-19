@@ -7,14 +7,15 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/manage',
-    component: () => import('../views/Manage.vue'),
+    component: () => import('../views/admin/Manage.vue'),
     redirect:"/manage/home",
     children:[
-      {path: 'home', name: '首页',component: () => import('../views/Home.vue')},
-      {path: 'products', name: '商品管理',component: () => import('../views/Products.vue')},
+      {path: 'home', name: '首页',component: () => import('../views/admin/Home.vue')},
+      {path: 'products', name: '商品管理',component: () => import('../views/admin/Products.vue')},
       {path: 'class', name: '班级管理', component: () => import('../views/Class.vue')},
-      {path: 'person', name: '个人信息', component: () => import('../views/Person.vue')},
-      {path: 'file', name: '文件管理', component: () => import('../views/File.vue')},
+      {path: 'person', name: '个人信息', component: () => import('../views/admin/Person.vue')},
+      {path: 'file', name: '文件管理', component: () => import('../views/admin/File.vue')},
+      {path: 'lunbo', name: '轮播图管理', component: () => import('../views/admin/Lunbo.vue')},
     ]
   },
   {

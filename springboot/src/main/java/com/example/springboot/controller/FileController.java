@@ -43,6 +43,8 @@ public class FileController {
     @Value("${productimg.upload.path}")
     private String productPAth;
 
+    @Value("${lunboimg.upload.path}")
+    private String lunboPAth;
     @Resource
     private FileMapper fileMapper;
 
@@ -190,18 +192,9 @@ public class FileController {
         url = "http://localhost:9090/file/product/"+fileUUid;
 
 
-        //文件路径
-        //存储数据库
-//        Products products = productsService.getById(id);
-//        if(products == null){
-//            return null;
-//        }
-//        products.setImage(url);
-//        productsService.saveOrUpdate(products);
         return url; //文件下载链接
         //上传成功后返回url
     }
-
 
 
     @GetMapping("/product/{fileUUid}")
@@ -209,6 +202,53 @@ public class FileController {
 
         //根据文件的唯一标识码获取文件
         File uploadFile = new File(productPAth + fileUUid);
+        //文件上传路径
+        //设置输出流格式
+        ServletOutputStream os =response.getOutputStream();
+        response.addHeader("Content-Disposition","attachment;filename=" + URLEncoder.encode(fileUUid,"UTF-8"));
+        response.setContentType("application/octet-stream");
+
+        //读取文件的字节流
+        os.write(FileUtil.readBytes(uploadFile));
+        os.flush();
+        os.close();
+    }
+
+    @PostMapping("/lunbo/upload")
+    public String  lunboUpload(@RequestParam MultipartFile file) throws IOException {
+        String orginalFilename = file.getOriginalFilename();
+        String type = FileUtil.extName(orginalFilename);
+
+        //判断配置文件目录是否存在，若不存在则创建一个新的文件目录
+        //定义一个文件唯一的标识码
+        String uuid = IdUtil.fastSimpleUUID();
+        String fileUUid = uuid + StrUtil.DOT +type;
+        File uploadFile = new File(lunboPAth + fileUUid);
+
+        File parentFile = uploadFile.getParentFile();
+        if(!parentFile.exists()){
+            parentFile.mkdirs();
+        }
+
+        //实现：对于相同内容不同文件名的文件，因为md5一样，在数据库中每个有一个记录，但是在磁盘中，只会存在一个最新的文件
+        String url;
+        //上传文件到磁盘
+        file.transferTo(uploadFile);
+
+        //把获取到的文件存储到磁盘目录
+        url = "http://localhost:9090/file/lunbo/"+fileUUid;
+
+
+        return url; //文件下载链接
+        //上传成功后返回url
+    }
+
+
+    @GetMapping("/lunbo/{fileUUid}")
+    public void downloadlunbo(@PathVariable String fileUUid , HttpServletResponse response) throws IOException {
+
+        //根据文件的唯一标识码获取文件
+        File uploadFile = new File(lunboPAth + fileUUid);
         //文件上传路径
         //设置输出流格式
         ServletOutputStream os =response.getOutputStream();

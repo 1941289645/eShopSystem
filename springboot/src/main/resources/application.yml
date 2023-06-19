@@ -32,3 +32,7 @@ productimg:
   upload:
     path: E:/code/files/productimg/
 
+lunboimg:
+  upload:
+    path: E:/code/files/lunboimg/
+

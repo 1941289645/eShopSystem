@@ -33,7 +33,7 @@ public class CodeGenerator {
 //                    builder.mapperBuilder().enableMapperAnnotation().build();  //在每一个Mapper前加@Mapper注解，因为在MybatisPlus中加入了mapper扫描，所以这个可加可不加
                     builder.controllerBuilder().enableHyphenStyle()  // 开启驼峰转连字符
                             .enableRestStyle();  // 开启生成@RestController 控制器    没有这个返回不了josn,只能返回controller,是返回视图的
-                    builder.addInclude("productcategories") // 设置需要生成的表名
+                    builder.addInclude("lunbo") // 设置需要生成的表名
                             .addTablePrefix("t_", "c_"); // 设置过滤表前缀
                 })
 //                .templateEngine(new FreemarkerTemplateEngine()) // 使用Freemarker引擎模板，默认的是Velocity引擎模板
