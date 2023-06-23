@@ -52,7 +52,8 @@ export default {
               this.$router.push("/manage/home")
               this.$message.success("登录成功")
             }else if(res.code==='200' && this.user.role==='user' && this.user.role===res.data.role){
-              this.$router.push("/")
+              localStorage.setItem("user",JSON.stringify(res.data))  //存储用户信息到浏览器
+              this.$router.push("/front/home")
               this.$message.success("登录成功")
             }else {
               this.$message.error("账号或密码错误")

@@ -31,6 +31,12 @@
         <span slot="title">轮播图管理</span>
       </template>
     </el-menu-item>
+    <el-menu-item index="/manage/orders">
+      <template >
+        <i class="el-icon-menu"></i>
+        <span slot="title">订单管理</span>
+      </template>
+    </el-menu-item>
     <el-submenu index="2">
       <template slot="title">
         <i class="el-icon-s-grid"></i>
