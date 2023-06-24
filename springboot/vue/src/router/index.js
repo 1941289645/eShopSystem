@@ -26,6 +26,8 @@ const routes = [
       {path: 'home',name:'首页',component:()=>import('../views/front/Home.vue')},
       {path: 'detail', name: '商品详情',component: () => import('../views/front/Detail.vue')},
       {path: 'cart', name: '购物车',component: () => import('../views/front/Cart.vue')},
+      {path: 'orders', name: '我的订单',component: () => import('../views/front/Orders.vue')},
+      {path: 'person', name: '个人信息', component: () => import('../views/front/Person.vue')},
     ]
   },
   {

@@ -1,6 +1,7 @@
 package com.example.springboot.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -37,5 +38,9 @@ public class Orderdetails implements Serializable {
 
     private String image;
 
+    @TableField(exist = false)
+    private String productName;
+
+    private String comment;
 
 }

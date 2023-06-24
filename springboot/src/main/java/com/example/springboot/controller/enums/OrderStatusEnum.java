@@ -2,10 +2,12 @@ package com.example.springboot.controller.enums;
 
 
 public enum OrderStatusEnum {
+    CANCEL(0,"已取消"),
     NEED_PAY(1,"待支付"),
     NEED_SEND(2,"待发货"),
-    NEED_COMMENT(3,"待评价"),
-    DONE(4,"已完成");
+    NEED_RECEIVE(3,"待收货"),
+    NEED_COMMENT(4,"待评价"),
+    DONE(5,"已完成");
 
 
     private int code;

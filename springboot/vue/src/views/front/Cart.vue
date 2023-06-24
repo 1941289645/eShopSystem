@@ -117,6 +117,7 @@ export default {
     async load() {
       await this.request.get("/cart/personCart").then(res => {
         this.tableData = res.data.list
+        console.log(this.user)
       })
       this.idArray = Array.from({length: this.tableData.length}, (_, index) => index + 1);
     },

@@ -11,7 +11,6 @@
     </div>
 
     <div style="margin: 10px 0">
-<!--      <el-button type="primary" @click="handleAdd">新增<i class="el-icon-circle-plus-outline"></i></el-button>-->
       <el-popconfirm
           class="ml-5"
           confirm-button-text='确定'
@@ -23,10 +22,6 @@
       >
         <el-button type="danger" slot="reference">批量删除<i class="el-icon-remove-outline"></i></el-button>  <!--slot="reference"使按钮显示-->
       </el-popconfirm>
-      <!--      <el-upload action="http://localhost:9090/department/import" :show-file-list="false" accept=".xlsx" :on-success="handleExcelImportSucess" style="display: inline-block">-->
-      <!--        <el-button type="primary" class="ml-5">导入<i class="el-icon-bottom"></i></el-button>-->
-      <!--      </el-upload>-->
-      <!--      <el-button type="primary" @click="exp" class="ml-5">导出<i class="el-icon-top"></i></el-button>-->
     </div>
 
     <el-table :data="tableData" border stripe :header-cell-class-name="headerBg" @selection-change="handleSelectionChange">
@@ -41,7 +36,7 @@
       <el-table-column prop="payno" label="付款编号"></el-table-column>
       <el-table-column label="操作" width="200" align="center">
         <template slot-scope="scope">
-<!--          <el-button type="success" @click="handleEdit(scope.row)">编辑 <i class="el-icon-edit"></i></el-button>-->
+          <el-button type="success" @click="changeStatus(scope.row,3)" v-if="scope.row.status ===2">发货</el-button>
           <el-popconfirm
               class="ml-5"
               confirm-button-text='确定'
@@ -123,6 +118,17 @@ export default {
     this.load()
   },
   methods: {
+    changeStatus(row,status) {
+      row.status=status
+      this.request.post("/orders/status",row).then(res=>{
+        if(res){
+          this.$message.success("操作成功")
+          this.load()
+        }else {
+          this.$message.error("保存失败")
+        }
+      })
+    },
     handleAdd(){
       this.dialogFormVisible=true
       this.form={}
@@ -132,7 +138,7 @@ export default {
       this.dialogFormVisible=true
     },
     del(id){
-      this.request.delete("/orders/"+id).then(res=>{
+      this.request.delete("/orders/"+autoId).then(res=>{
         if(res){
           this.$message.success("删除成功")
           this.dialogFormVisible=false
@@ -143,7 +149,7 @@ export default {
       })
     },
     delBatch(){
-      let ids=this.multipleSelection.map(v => v.id)  //[{},{},{}] => [1,2,3] 把一个对象数组转换成纯数组
+      let ids=this.multipleSelection.map(v => v.autoId)  //[{},{},{}] => [1,2,3] 把一个对象数组转换成纯数组
       this.request.post("/orders/del/batch",ids).then(res=>{
         if(res){
           this.$message.success("批量删除成功")

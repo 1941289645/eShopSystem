@@ -17,4 +17,6 @@ import java.util.List;
 public interface IOrdersService extends IService<Orders> {
 
     void addOrder(List<Cart> carts);
+
+    void updateOrder(Orders orders);
 }

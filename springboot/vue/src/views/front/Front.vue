@@ -41,7 +41,7 @@
     </div>
 
     <div style="width: 1000px;margin: 0 auto;padding-bottom: 100px">
-      <router-view />
+      <router-view @refreshUser="getUser"/>
     </div>
   </div>
 </template>
@@ -54,11 +54,22 @@ export default {
       user:localStorage.getItem("user")? JSON.parse(localStorage.getItem("user")):{}
     }
   },
+  created() {
+    this.getUser()
+  },
   methods:{
     logout(){
       this.$router.push("/login")
       localStorage.removeItem("user")
       this.$message.success("退出成功")
+    },
+    getUser(){
+      //从后台获取数据
+      let id = localStorage.getItem("user")?JSON.parse(localStorage.getItem("user")).id:""
+      this.request.get("/members/id/" + id).then(res =>{
+        console.log(res.data)
+        this.user = res.data
+      })
     }
   }
 }

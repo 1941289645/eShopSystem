@@ -5,7 +5,9 @@ import cn.hutool.core.util.IdUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.springboot.common.Result;
 import com.example.springboot.controller.enums.OrderStatusEnum;
-import com.example.springboot.entity.Cart;
+import com.example.springboot.entity.*;
+import com.example.springboot.service.IOrderdetailsService;
+import com.example.springboot.service.IProductsService;
 import com.example.springboot.utils.TokenUtils;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
@@ -14,7 +16,6 @@ import java.util.List;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 
 import com.example.springboot.service.IOrdersService;
-import com.example.springboot.entity.Orders;
 
 import org.springframework.web.bind.annotation.RestController;
 
@@ -33,6 +34,12 @@ public class OrdersController {
     @Resource
     private IOrdersService ordersService;
 
+    @Resource
+    private IOrderdetailsService orderdetailsService;
+
+    @Resource
+    private IProductsService productsService;
+
     //新增和修改
     @PostMapping
     public boolean save(@RequestBody Orders orders){//@RequestBody将前台josn对象转换为后台的java对象
@@ -45,6 +52,13 @@ public class OrdersController {
         ordersService.addOrder(carts);
         return Result.success();
     }
+
+    @PostMapping("/status")
+    public Result updateOrder(@RequestBody Orders orders){
+        ordersService.updateOrder(orders);
+        return Result.success();
+    }
+
 
     //删除指定deptid的数据
     @DeleteMapping("/{id}")
@@ -77,7 +91,25 @@ public class OrdersController {
         QueryWrapper<Orders> queryWrapper= new QueryWrapper<>();
         queryWrapper.orderByDesc("auto_id");
         queryWrapper.like("order_id",orderId);
-        return ordersService.page(new Page<>(pageNum,pageSize),queryWrapper);
+
+        Members currentMember= TokenUtils.getCurrentUser();
+        if (currentMember.getRole().equals("user")){
+            queryWrapper.eq("member_id",currentMember.getId());
+        }
+
+        Page<Orders> page = ordersService.page(new Page<>(pageNum, pageSize), queryWrapper);
+        for (Orders record:page.getRecords()){
+            String id=record.getOrderId();
+            List<Orderdetails> orderdetails=orderdetailsService.list(new QueryWrapper<Orderdetails>().eq("order_id",id));
+
+            for (Orderdetails temp: orderdetails){
+                Products product = productsService.getById(temp.getProductId());
+                temp.setProductName(product.getName());
+            }
+            record.setOrderdetails(orderdetails);
+        }
+
+        return page;
     }
 
 }
