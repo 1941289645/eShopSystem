@@ -55,10 +55,9 @@ public class Orders implements Serializable {
     @ApiModelProperty("付款编号")
     private String payno;
 
-
-
     private Integer status;
 
+    private String expressNumber;
 
     @TableField(exist = false)
     private List<Orderdetails> orderdetails;

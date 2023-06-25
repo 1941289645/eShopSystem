@@ -309,8 +309,122 @@ this.$router.replace('/')
 
 
 
-### flex弹性布局
+#### flex弹性布局
 
 参考链接:
 
 [Flex 布局语法教程 | 菜鸟教程 (runoob.com)](https://www.runoob.com/w3cnote/flex-grammar.html)
+
+
+
+
+
+## 2023年6月25日14点58分
+
+### 参数体和路径传参一起
+
+```vue
+this.request.post("/orders/addOrder",this.multipleSelection,{params:this.form})
+```
+
+后端：
+
+```java
+@PostMapping("/addOrder")
+public Result addOrder(@RequestBody List<Cart> carts, @RequestParam Map<String, Object> form)
+```
+
+this.form是一个对象，后端用Map接收
+
+> 获得form中存储的对象
+
+```VUE
+String contactName = (String) form.get("contactName");
+```
+
+
+
+如果前端传入的是一个复合对象，后端用这个来接收：
+
+> @RequestBody Map<String, Object> requestData
+
+```vue
+// 处理请求体中的数据
+String field1 = (String) requestData.get("field1");
+Integer field2 = (Integer) requestData.get("field2");
+```
+
+
+
+### 设置this.$message的显示时间
+
+在main.js里面输入：
+
+```
+import {Message} from 'element-ui'
+```
+
+```js
+//注意：这里使用的$message,所以在使用时候也是this.$message
+Vue.prototype.$message = function(msg){
+  return Message({
+    message: msg,
+    duration: 1000
+  })
+}
+//分别对success、warning和error等样式进行设置
+Vue.prototype.$message.success = function (msg) {
+  return Message.success({
+    message: msg,
+    duration: 1000
+  })
+}
+Vue.prototype.$message.warning = function (msg) {
+  return Message.warning({
+    message: msg,
+    duration: 1000
+  })
+}
+Vue.prototype.$message.error = function (msg) {
+  return Message.error({
+    message: msg,
+    duration: 1000
+  })
+}
+```
+
+下面这里应对的是这种输入，选一种即可：
+
+```vue
+this.$message({
+	message:"",
+	type:success,
+	duration:3000
+})
+```
+
+```js
+
+Vue.prototype.$message = function(msg){
+    //根据msg对象中的type类型判断消息提示的类型
+    let msgObj = {
+      message:msg.message?msg.message:msg,
+      duration: 3000
+    }
+    let msgType = msg.type || ""
+    switch(msgType) {
+      case 'success':
+        return Message.success(msgObj);
+
+      case 'warning':
+        return Message.warning(msgObj);
+
+      case 'error':
+        return Message.error(msgObj);
+
+      default:
+        return Message(msgObj);
+  }
+}
+```
+

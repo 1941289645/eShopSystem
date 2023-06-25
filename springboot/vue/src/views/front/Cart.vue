@@ -46,9 +46,27 @@
     <div style="padding: 10px 20px;background-color: white;margin: 10px 0;text-align: right;border-radius: 10px">
       <div style="color: red">总价 ￥{{totalPrice}}</div>
       <div style="margin: 10px 0">
-        <el-button style="background-color: red;color: white;font-size: 18px;padding: 10px 20px" @click="adaOrder">下单</el-button>
+        <el-button style="background-color: red;color: white;font-size: 18px;padding: 10px 20px" @click="openDialog">下单</el-button>
       </div>
     </div>
+
+
+    <el-dialog title="收货信息" :visible.sync="dialogFormVisible" width="30%" :close-on-click-modal="false">
+      <el-form label-width="80px"  size="medium">
+        <el-form-item prop="contactName" label="收货人">
+          <el-input v-model="form.contactName" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item prop="contactPhoneNo" label="手机号码">
+          <el-input v-model="form.contactPhoneNo" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item prop="contactAddress" label="收货地址">
+          <el-input v-model="form.contactAddress" autocomplete="off"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="adaOrder">确 定</el-button>
+      </div>
+    </el-dialog>
 
   </div>
 </template>
@@ -63,21 +81,30 @@ export default {
       dialogFormVisible:false,
       multipleSelection: [],
       user:localStorage.getItem("user")? JSON.parse(localStorage.getItem("user")):{},
-      totalPrice:0
+      totalPrice:0,
+      form:{
+        contactName:"",
+        contactPhoneNo:"",
+        contactAddress:""
+      }
     }
   },
   created() {
     this.load()
   },
   methods: {
+    openDialog(){
+      this.dialogFormVisible=true
+    },
     adaOrder(){
       if(!this.multipleSelection.length){
         this.$message.error("下单失败，未选择商品")
         return
       }else{
-        this.request.post("/orders/addOrder",this.multipleSelection).then(res=>{
+        this.request.post("/orders/addOrder",this.multipleSelection,{params:this.form}).then(res=>{
           if(res){
             this.$message.success("下单成功")
+            this.dialogFormVisible=false
             this.load()
           }else {
             this.$message.error("下单失败")

@@ -34,9 +34,13 @@
       <el-table-column prop="orderDate" label="创建时间"></el-table-column>
       <el-table-column prop="payTime" label="付款时间"></el-table-column>
       <el-table-column prop="payno" label="付款编号"></el-table-column>
+      <el-table-column prop="contactName" label="收货人"></el-table-column>
+      <el-table-column prop="contactPhoneno" label="手机号码"></el-table-column>
+      <el-table-column prop="contactAddress" label="收货地址"></el-table-column>
+      <el-table-column prop="expressNumber" label="快递单号"></el-table-column>
       <el-table-column label="操作" width="200" align="center">
         <template slot-scope="scope">
-          <el-button type="success" @click="changeStatus(scope.row,3)" v-if="scope.row.status ===2">发货</el-button>
+          <el-button type="success" @click="openDialog(scope.row)" v-if="scope.row.status ===2">发货</el-button>
           <el-popconfirm
               class="ml-5"
               confirm-button-text='确定'
@@ -44,7 +48,7 @@
               icon="el-icon-info"
               icon-color="red"
               title="您确定删除吗？"
-              @confirm="del(scope.row.id)"
+              @confirm="del(scope.row.autoId)"
           >
             <el-button type="danger" slot="reference">删除 <i class="el-icon-remove-outline"></i></el-button>
           </el-popconfirm>
@@ -63,33 +67,15 @@
       </el-pagination>
     </div>
 
-    <el-dialog title="商品信息" :visible.sync="dialogFormVisible" width="30%">
+    <el-dialog title="快递信息" :visible.sync="dialogFormVisible" width="30%">
       <el-form label-width="80px"  size="small">
-        <el-form-item label="商品名">
-          <el-input v-model="form.name" autocomplete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="价格">
-          <el-input v-model="form.price" autocomplete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="库存">
-          <el-input v-model="form.nums" autocomplete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="库存单位">
-          <el-input v-model="form.unit" autocomplete="off"></el-input>
-        </el-form-item>
-        <el-form-item prop="img" label="图片">
-          <el-upload action="http://localhost:9090/file/product/upload"
-                     ref="image"
-                     :on-success="handleImgUploadSuccess"
-                     :limit="1"
-          >
-            <el-button size="small" type="primary">点击上传</el-button>
-          </el-upload>
+        <el-form-item label="快递单号">
+          <el-input v-model="form.expressNumber" autocomplete="off"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="save">确 定</el-button>
+        <el-button type="primary" @click="changeStatus(form,3)">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -118,8 +104,13 @@ export default {
     this.load()
   },
   methods: {
+    openDialog(row) {
+      this.form=JSON.parse(JSON.stringify(row))
+      this.dialogFormVisible=true
+    },
     changeStatus(row,status) {
       row.status=status
+      this.dialogFormVisible=false
       this.request.post("/orders/status",row).then(res=>{
         if(res){
           this.$message.success("操作成功")
@@ -137,7 +128,7 @@ export default {
       this.form = JSON.parse(JSON.stringify(row)) //深拷贝，解决没点确定表格数据变化问题
       this.dialogFormVisible=true
     },
-    del(id){
+    del(autoId){
       this.request.delete("/orders/"+autoId).then(res=>{
         if(res){
           this.$message.success("删除成功")
@@ -171,6 +162,7 @@ export default {
           orderId:this.name
         }
       }).then(res=>{
+        console.log(res.records)
         this.tableData=res.records
         this.total=res.total
       })

@@ -35,11 +35,7 @@
         </template>
       </el-table-column>
       <el-table-column prop="orderDate" label="创建时间" width="100px"></el-table-column>
-      <el-table-column prop="payTime" label="付款时间">
-        <template v-slot="scope">
-
-        </template>
-      </el-table-column>
+      <el-table-column prop="payTime" label="付款时间"></el-table-column>
       <el-table-column prop="payno" label="付款编号"></el-table-column>
       <el-table-column label="详情" width="100px">
         <template v-slot="scope">

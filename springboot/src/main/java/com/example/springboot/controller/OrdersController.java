@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
+
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 
 import com.example.springboot.service.IOrdersService;
@@ -48,8 +50,8 @@ public class OrdersController {
     }
 
     @PostMapping("/addOrder")
-    public Result addOrder(@RequestBody List<Cart> carts){
-        ordersService.addOrder(carts);
+    public Result addOrder(@RequestBody List<Cart> carts, @RequestParam Map<String, Object> form){
+        ordersService.addOrder(carts,form);
         return Result.success();
     }
 

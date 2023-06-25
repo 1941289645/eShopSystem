@@ -5,6 +5,7 @@ import com.example.springboot.entity.Orders;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -16,7 +17,7 @@ import java.util.List;
  */
 public interface IOrdersService extends IService<Orders> {
 
-    void addOrder(List<Cart> carts);
+    void addOrder(List<Cart> carts, Map<String, Object> form);
 
     void updateOrder(Orders orders);
 }

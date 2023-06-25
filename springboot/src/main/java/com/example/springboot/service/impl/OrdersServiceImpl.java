@@ -15,13 +15,16 @@ import com.example.springboot.service.IOrdersService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.springboot.service.IProductsService;
 import com.example.springboot.utils.TokenUtils;
+import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import javax.sql.rowset.serial.SerialException;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -42,12 +45,15 @@ public class OrdersServiceImpl extends ServiceImpl<OrdersMapper, Orders> impleme
     @Autowired
     private ICartService cartService;
     @Override
-    public void addOrder(List<Cart> carts) {
+    public void addOrder(List<Cart> carts, Map<String, Object> form) {
         BigDecimal total=new BigDecimal(0);
         Orders orders = new Orders();
         orders.setOrderId(IdUtil.fastSimpleUUID());//设置订单Id
         orders.setMemberId(TokenUtils.getCurrentUser().getId());
         orders.setStatus(OrderStatusEnum.NEED_PAY.getCode());     //设置待支付状态
+        orders.setContactName((String) form.get("contactName"));
+        orders.setContactPhoneno((String) form.get("contactPhoneNo"));
+        orders.setContactAddress((String) form.get("contactAddress"));
         for (Cart cart:carts){
             total=total.add(cart.getPrice().multiply(BigDecimal.valueOf(cart.getNum())));
 
@@ -88,6 +94,11 @@ public class OrdersServiceImpl extends ServiceImpl<OrdersMapper, Orders> impleme
                 products.setNums(products.getNums()+ orderdetail.getAmount());
                 productsService.updateById(products);
             }
+        }
+        if (Objects.equals(orders.getStatus(), OrderStatusEnum.NEED_SEND.getCode())){
+            //加入付款时间和付款编号
+            orders.setPayTime(LocalDateTime.now());
+            orders.setPayno( RandomStringUtils.randomAlphanumeric(11));
         }
         updateById(orders);
     }
