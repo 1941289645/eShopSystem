@@ -6,7 +6,6 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.springboot.common.Constants;
 import com.example.springboot.controller.dto.UserDTO;
 import com.example.springboot.entity.Members;
-import com.example.springboot.entity.Teacher;
 import com.example.springboot.exception.ServiceException;
 import com.example.springboot.mapper.MembersMapper;
 import com.example.springboot.service.IMembersService;

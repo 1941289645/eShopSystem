@@ -3,16 +3,11 @@ package com.example.springboot.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.springboot.common.Result;
-import com.example.springboot.entity.Members;
-import com.example.springboot.entity.Productcategories;
-import com.example.springboot.entity.Teacher;
 import com.example.springboot.mapper.ProductsMapper;
 import com.example.springboot.service.IProductcategoriesService;
-import com.example.springboot.utils.TokenUtils;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.util.List;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 
 import com.example.springboot.service.IProductsService;
 import com.example.springboot.entity.Products;
